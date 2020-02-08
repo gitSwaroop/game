@@ -1,0 +1,441 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+		<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+		<style>
+			body{margin:0; padding:0;}
+			*{box-sizing:border-box;}
+			.container{width:1200px; margin:auto; display:table; margin-top:25px; text-align:center}
+			.top{width:100%; display:table; height:100px;}
+			.midle{width:100%; display:table;}
+			.mdle-left{width:20%; display:table-cell; vertical-align:middle;}
+			.mdle-mdle{width:60%; display:table-cell;}
+			.mdle-right{width:20%; display:table-cell; vertical-align:middle;}
+			.ply-ground{display:inline-block; width:175px; border:1px solid #ccc;}
+			.plyr-name{width:50%; float:left; border-right:1px solid #ccc; padding:15px;}
+			.plyr-name{font-size:30px;}
+			.plyr-dies{width:50%; float:left; padding:5px; position:relative; overflow:hidden}
+			.cube{width:100%; float:left; height:54px; background:#ccc;}
+			a{text-decoration:none;}
+			table#table{width:100%; margin:auto;}
+			table#table td{text-align:center; border:1px solid #ccc; position:relative; width:10%; height:40px; transition:0.3s ease-in-out all;}
+			table#table td:last-child{overflow:hidden;}
+			table#table td:first-child{overflow:hidden;}
+			table#table td:nth-child(odd){background:#fec8c4;}
+			table#table td:nth-child(even){background:#c4e5fe;}
+			.ovrly{width:100%; height:100%; position:fixed; left:0; top:0; background: rgba(0, 0, 0, 0.7); display:table;}
+			.modal{width:100%; height:100%; display:table-cell; text-align:center; vertical-align:middle;}
+			.modal-inn{width:700px; min-height:200px; background:#FFF; display:inline-block;}
+			.plyer-table{width:100%; height:100%;}
+			.plyer-table td{border:1px solid #f1f1f1; width:50%; padding:30px;}
+			.plyer-table td a{width:100%; height:100%;}
+			.plyer-table td i{margin:0 10px; font-size:25px;}
+			.color-box{width:100%; float:left; margin:15px 0 0 0;}
+			.rdo-box{margin:0 5px 0 0;}
+			#choseColor{display:none;}
+			.pyrcolor{width:100%; float:left; padding:15px;}
+
+			#table tr:nth-child(even) .animatePlyer{ position:absolute; animation: animateElementEvn linear .3s; animation-iteration-count: 1; background:none; margin-left:5px;}
+			@keyframes animateElementEvn{
+			  0%{ opacity:0; transform:  translate(-80px,0px);transition:0.2 ease-in-out all;}
+			  100% { opacity:1; transform:  translate(-25px,0px);transition:0.8 ease-in-out all;}
+			}
+
+			#table tr:nth-child(odd) .animatePlyer{ position:absolute; animation: animateElementodd linear .3s; animation-iteration-count: 1; background:none; margin-left:5px;}
+			@keyframes animateElementodd{
+			  0%{ opacity:0; transform:  translate(40px,0px);transition:0.2 ease-in-out all;}
+			  100% { opacity:1; transform:  translate(0px,0px);transition:0.8 ease-in-out all;}
+			}
+			.overdiv{position:absolute; left:0; top:0; width:100%; height:100%; opacity:0.7; background:#ccc; transition:0.5 ease-in-out all;}
+			.db{visibility:visible; transition:0.3s ease-in-out all;}
+			.player1-of-1{font-size:20px; position:absolute !important; left:44px !important; top:8px !important; margin:0 !important;}
+			.player1-of-2{font-size:18px; position:absolute !important; left:7px !important; margin:0 !important;}
+			.player2-of-2{font-size:18px; position:absolute !important; right:7px !important; margin:0 !important;}
+			.player1-of-3{font-size:15px; position:absolute !important; left:7px !important; top:3px !important; margin:0 !important;}
+			.player2-of-3{font-size:15px; position:absolute !important; right:7px !important; top:3px !important; margin:0 !important;}
+			.player3-of-3{font-size:15px; position:absolute !important; right:7px !important; bottom:3px !important; margin:0 !important;}
+			.player1-of-4{font-size:15px; position:absolute !important; left:7px !important; top:3px !important; margin:0 !important;}
+			.player2-of-4{font-size:15px; position:absolute !important; right:7px !important; top:3px !important; margin:0 !important;}
+			.player3-of-4{font-size:15px; position:absolute !important; right:7px !important; bottom:3px !important; margin:0 !important;}
+			.player4-of-4{font-size:15px; position:absolute !important; left:7px !important; bottom:3px !important; margin:0 !important;}
+
+			.pl.single{font-size: 22px;left: 35px;top: 7px; z-index:1;}
+
+
+			.cube.rotateOne{
+				transform: skewX(360deg) skewY(180deg);
+				transition:0.3s ease-in-out all;
+			}
+			.cube.rotateTwo{
+				 -webkit-transform: rotateY(360deg); /* Safari */
+				transform: rotateY(360deg); /* Standard syntax */
+				transition:0.3s ease-in-out all;
+				-webkit-transition:0.3s ease-in-out all;
+				-moz-transition:0.3s ease-in-out all;
+			}
+
+
+
+			.number1of1{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%;top: 22px;left: 34px;}
+
+			.number1of2{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; left: 22px; top: 22px;}
+			.number2of2{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 22px; left: 44px;}
+
+			.number1of3{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 22px; left: 15px;}
+			.number2of3{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 22px; left: 34px;}
+			.number3of3{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 22px; left: 53px;}
+
+			.number1of4{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 15px; left: 20px;}
+			.number2of4{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 15px; left: 48px;}
+			.number3of4{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 32px; left: 20px;}
+			.number4of4{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 32px; left: 48px;}
+
+			.number1of5{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 12px; left: 14px;}
+			.number2of5{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 12px; left: 53px;}
+			.number3of5{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; left: 34px; top: 25px;}
+			.number4of5{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; left: 14px; top: 35px;}
+			.number5of5{position: absolute;background: #000;width: 10px;height: 10px;border-radius: 100%; top: 35px; left: 53px;}
+
+			.number1of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; left: 22px; top: 10px;}
+			.number2of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; top: 10px; left: 47px;}
+			.number3of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; left: 22px; top: 24px;}
+			.number4of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; top: 24px; left: 47px;}
+			.number5of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; left: 22px; top: 38px;}
+			.number6of6{position: absolute;background: #000;width: 8px;height: 8px;border-radius: 100%; left: 47px; top: 38px;}
+
+			#table tr:nth-child(even) .pl.up, #table tr:nth-child(odd) .pl.up{ animation: shake 0.4s; 
+				/* When the animation is finished, start again */
+				animation-iteration-count: infinite; font-size:26px; z-index:9;}
+			@keyframes shake{
+			   0% { transform: translate(1px, 1px) rotate(0deg); transition:0.9s ease-in-out all;}
+				10% { transform: translate(0px, 1px) rotate(-1deg); transition:0.9s ease-in-out all;}
+				20% { transform: translate(0px, -5px) rotate(1deg); transition:0.9s ease-in-out all;}
+			   
+			}
+		</style>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script>
+			var snakesAndladders = (function(){
+				var _html = "",rowFirstnum,rowLastnum,playerNumber,flag = "flase",errorArray = [], playerArray = [], tdColor = ['red','bule','green','yellow'], plyeriesNumber, status = "";
+				return {
+					createTable:function(){
+						for(i = 100; i>=0; --i){
+							if(i % 10 == i){
+								var firstNumber = i;
+								_html+="<tr>";
+									if(firstNumber % 2 == 0){
+										rowFirstnum = parseInt(firstNumber+"1");
+										rowLastnum = rowFirstnum + 10;
+										for(j = rowFirstnum; j<rowLastnum; j++){
+											_html+="<td id=ids"+j+">"+j+"</td>";
+											
+										}			
+										document.getElementById('table').innerHTML = _html;
+									}else{
+										rowFirstnum = parseInt(firstNumber+"1");
+										rowLastnum = rowFirstnum + 9;
+										for(j = rowLastnum; j>=rowFirstnum; --j){
+											_html+="<td id=ids"+j+">"+j+"</td>";
+											
+										}
+									}
+								_html+="</tr>";
+								document.getElementById('table').innerHTML = _html;	
+							}
+						}
+					},
+					selectPlayers:function(noOfplayers){
+						document.getElementById('chosePlayr').style = "display:none";
+						document.getElementById('choseColor').style = "display:inline-block";
+						playerNumber+="<td>";
+						for(i = 0; i<noOfplayers; i++){
+							var plyrName = i + 1;
+							playerNumber+='<div class="pyrcolor" id="pyrcolor'+plyrName+'"><span class="rdo-box"><input class="rdos" type="radio" name="colorRed" id="red'+plyrName+'" onchange="snakesAndladders.resetRadiobuttons(event)" value="red"><label for="red'+plyrName+'">RED</label></span><span class="rdo-box"><input class="rdos" type="radio" name="colorBlue" id="blue'+plyrName+'" onchange="snakesAndladders.resetRadiobuttons(event)" value="blue"><label for="blue'+plyrName+'">BLUE</label></span><span class="rdo-box"><input class="rdos" type="radio" name="colorGreen" id="green'+plyrName+'" onchange="snakesAndladders.resetRadiobuttons(event)" value="green"><label for="green'+plyrName+'">GREEN</label></span><span class="rdo-box"><input class="rdos" type="radio" name="colorYellow" id="yellow'+plyrName+'" onchange="snakesAndladders.resetRadiobuttons(event)" value="yellow"><label for="yellow'+plyrName+'">YELLOW</label></span><i class="fas fa-tint"></i><span class="pyrname">Player'+plyrName+'</span></div>';
+						}
+						playerNumber+="</td>";
+						$('#choseColor tr#trme').append(playerNumber);
+					},
+					resetRadiobuttons:function(event){
+						var getThis = event.target;
+						$(getThis).parent().parent().find('input[type="radio"]').prop("checked","");
+						$(getThis).prop("checked","checked");
+					},
+					saveColorandPlayers:function(callback){
+						var plers = $('.pyrcolor');
+						//playerArray = [];
+						for(i = 0; i<plers.length; i++){
+							errorArray = [];
+							var plyrData = {
+								plyrName:"",
+								PlyrColor:""
+							}
+							var plyrno = i + 1;
+							var eachplyr = plers[i];
+							var playerName = $('.pyrcolor:nth-child('+plyrno+')').attr("id");
+							var l = $("#"+playerName).find('.rdos').length;
+							for(j = 0; j<l; j++){
+								var jlpus = j + 1;
+								var radioChild = $("#"+playerName).find('span:nth-child('+jlpus+')').find('.rdos').attr('id');
+								if($("#"+radioChild).is(":checked")){
+									var color = $("#"+radioChild).val();
+									plyrData.plyrName = playerName;
+									plyrData.PlyrColor = color;
+									errorArray.push(1);
+									playerArray.push(plyrData);
+									break;
+								}else{
+									errorArray.push(0);
+								}
+							}
+							if(errorArray.length > 0){
+								var err = errorArray.indexOf(1);
+								if(err == -1){
+									alert("Please Select Color for Player "+plyrno);
+									return false;
+								}
+							}
+						}
+						for(i = 0; i<playerArray.length; i++){
+							var plrno = i + 1
+							$("#ids1").append('<span class="pl fas fa-tint animatePlyer player'+plrno+'-of-'+playerArray.length+'" id="player'+plrno+'" style="color:'+playerArray[i].PlyrColor+'"></span>');
+							$("#plyr"+plrno+"").append('<div class="ply-ground" ><div class="plyr-name"><i class="fas fa-tint" style="color:'+playerArray[i].PlyrColor+'"></i></div><div class="plyr-dies"></div></div><div>Player '+plrno	+'</div>')
+							
+						}
+						$(".ovrly").hide();
+						plyeriesNumber = Math.floor(Math.random() * plers.length) + 1;
+						var totalPlayer = playerArray.length;
+						$('.plyr-dies').empty();
+						callback(plyeriesNumber, totalPlayer);
+					},
+					activeDies:function(plrno, totalPlayer){;
+						$('.plyr-dies').empty();
+						$('.pl').removeClass('up');
+						if(totalPlayer == 1){
+							$('#plyr'+plrno+'').find('.plyr-dies').append('<div class="cube" data-player="player'+plrno+'" id="diesfor-'+plrno+'" onclick="snakesAndladders.playeGame(event, '+plrno+', snakesAndladders.movePlayer)"></div>');
+						}else{
+							if(plrno == totalPlayer){
+								$('#plyr'+plrno+'').find('.plyr-dies').append('<div class="cube" data-player="player'+plrno+'" id="diesfor-'+plrno+'" onclick="snakesAndladders.playeGame(event, '+plrno+', snakesAndladders.movePlayer)"></div>');
+							}else{
+								$('#plyr'+plrno+'').find('.plyr-dies').append('<div class="cube" data-player="player'+plrno+'" id="diesfor-'+plrno+'" onclick="snakesAndladders.playeGame(event, '+plrno+', snakesAndladders.movePlayer)"></div>');
+							}
+						}
+						//$('#player'+plrno).css({'z-index':'9','font-size':'22px'});
+						$('#player'+plrno).addClass('up');
+					},
+					playeGame:function(event, plrno, callback){
+						var totalPlayer = playerArray.length;
+						var plrnoOj = plrno;
+						var plyb = plrno;
+						var plyn = plrno;
+						if(plyn == totalPlayer){
+							plyn = 1;
+						}else{
+							plyn = plyn + 1;
+						}
+						var getthisCube = event.target;
+						$(getthisCube).addClass('rotateOne');
+						var dataAtr = "player"+plyb;
+						var plrHtml = "";
+						var elsplyn = plyn + 1
+						$(".cube").empty();
+						setTimeout(function(){ 	
+							var startNumber = Math.floor(Math.random() * 6) + 1;
+							if(totalPlayer > 1){
+								if(startNumber == 6){
+									var aspa = plyb;
+									var aspb = totalPlayer;
+									callback(event, dataAtr, startNumber, plyn, aspa, aspb, plrnoOj);
+								}else{
+									var aspa = plyn;
+									var aspb = totalPlayer;
+									callback(event, dataAtr, startNumber, plyn, aspa, aspb, plrnoOj);
+								}
+							}else{
+								var aspa = plyn;
+								var aspb = totalPlayer;
+								callback(event, dataAtr, startNumber, 1, aspa, aspb, plrnoOj);
+							}
+							for(i = 0; i<startNumber; i++){
+								var plyrsartNumber = i + 1;
+								plrHtml+='<span class="number'+plyrsartNumber+'of'+startNumber+'"></span>';
+							}
+							$(".cube").append(plrHtml);
+						}, 400);
+					},
+					movePlayer:function(event, dataAtr, startNumber, plyeriesNumber, aspa, aspb, plrnoOj){
+						setTimeout(function(){ 
+							var thisText = parseInt($('#'+dataAtr).parent().text());
+							var atrColor = $('#'+dataAtr).attr('style');
+							var newNumber = startNumber + thisText;
+							console.log(thisText);
+							if(startNumber == 6 && thisText == 1){
+								console.log("number is 6 and firstNumber is 1");
+								snakesAndladders.moveAction(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj);
+							}else if(startNumber == 6 && thisText != 1){
+								console.log("number is 6 and firstNumber is greater than 1");
+								//snakesAndladders.activeDies(aspa, aspb);
+								snakesAndladders.moveAction(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj);
+							}else if(startNumber < 6 && thisText == 1){
+								console.log("cant moove");
+								//snakesAndladders.activeDies(aspa, aspb);
+								//return false;
+							}else if(thisText == 47){
+								alert("hi");
+								snakesAndladders.moveAction(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj);
+							}else{
+								console.log("number is not 6");
+								snakesAndladders.moveAction(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj);
+							}
+							snakesAndladders.moveAction(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj);
+						},600);
+					},
+					moveAction:function(thisText, atrColor, newNumber, dataAtr, aspa, aspb, plrnoOj){
+						//var atrColor = $('#'+dataAtr).attr('style');
+						console.log(aspa);
+						console.log(aspb);
+						var forOverly = aspa - 1
+						$('#'+dataAtr).remove();
+						$('.overdiv').remove();
+						$('#diesfor-'+plrnoOj).parent().append('<div class="overdiv"></div>');
+						var myTimer = setInterval(function(){
+							
+							thisText++;
+							var nm = thisText;
+							var reduce = nm - 1;
+							var flk = false;
+							if(thisText > newNumber){
+								clearInterval(myTimer);
+								$('.overdiv').remove();
+								var msg = "reached";
+								snakesAndladders.activeDies(aspa, aspb);
+							}else{
+								var neplyHtml = "";
+								$("#ids"+reduce).find("#"+dataAtr).remove();
+								var newplyr = $("#ids"+newNumber).children().length + 1;
+								$("#ids"+thisText).append('<span class="pl fas fa-tint single animatePlyer" id="'+dataAtr+'" style="'+atrColor+'"></span>');
+								if(parseInt($("#"+dataAtr).parent().text()) == 5 && newNumber == 5){
+									snakesAndladders.climbLadder(14, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 9 && newNumber == 9){
+									snakesAndladders.climbLadder(31, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 20 && newNumber == 20){
+									snakesAndladders.climbLadder(38, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 28 && newNumber == 28){
+									snakesAndladders.climbLadder(84, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 40 && newNumber == 40){
+									snakesAndladders.climbLadder(59, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 51 && newNumber == 51){
+									snakesAndladders.climbLadder(67, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 63 && newNumber == 63){
+									snakesAndladders.climbLadder(81, dataAtr, atrColor, thisText);
+								}else if(parseInt($("#"+dataAtr).parent().text()) == 71 && newNumber == 71){
+									snakesAndladders.climbLadder(91, dataAtr, atrColor, thisText);
+								}
+							}
+						}, 500);
+					},
+					climbLadder:function(toNum, dataAtr, atrColor, thisText){
+						setTimeout(function(){
+							$('#ids'+thisText).children('#'+dataAtr).remove();
+						},600)
+						setTimeout(function(){
+							$('#ids'+toNum).children('#'+dataAtr).remove();
+							$("#ids"+toNum).append('<span class="pl fas fa-tint single" id="'+dataAtr+'" style="'+atrColor+'"></span>');
+						},800)
+						
+					}
+				}
+			})();
+			window.onload = function() {
+				snakesAndladders.createTable();
+				//snakesAndladders.activeDies();
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="top" id="plyr3">
+				<!--<div class="ply-ground">
+					<div class="plyr-name">
+						
+					</div>
+					<div class="plyr-dies">
+					</div>
+				</div>-->
+			</div>
+			<div class="midle">
+				<div class="mdle-left" id="plyr4">
+					
+				</div>
+				<div class="mdle-mdle">
+					<table id="table">
+					</table>
+				</div>
+				<div class="mdle-right" id="plyr2">
+					<!--<div class="ply-ground" >
+						<div class="plyr-name">
+							
+						</div>
+						<div class="plyr-dies">
+						</div>
+					</div>-->
+				</div>
+			</div>
+			<di	v class="top" id="plyr1">
+				
+			</div>
+		</div>
+		<div class="ovrly">
+			<div class="modal">
+				<div class="modal-inn" id="chosePlayr">
+					<h2>Choose Player</h2>
+					<table class="plyer-table">
+						<tr>
+							<td>
+								<a href="javascript:void(0)" onclick="snakesAndladders.selectPlayers(1);">
+									<i class="fas fa-tint"></i>
+								</a>
+							</td>
+							<td>
+								<a href="javascript:void(0)" onclick="snakesAndladders.selectPlayers(2);">
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a href="javascript:void(0)" onclick="snakesAndladders.selectPlayers(3);">
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+								</a>
+							</td>
+							<td>
+								<a href="javascript:void(0)" onclick="snakesAndladders.selectPlayers(4);">
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+									<i class="fas fa-tint"></i>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-inn" id="choseColor">
+					<h2>Choose Color</h2>
+					<table class="plyer-table">
+						<tr id="trme">
+							
+						</tr>
+						<tr>
+							<td><input type="button" value="ok" onclick="snakesAndladders.saveColorandPlayers(snakesAndladders.activeDies);"></td>
+						</tr>
+						
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
